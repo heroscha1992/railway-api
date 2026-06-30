@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
 
 const app = express();
 
@@ -8,7 +9,17 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-// test route
+// ✅ MongoDB connection
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log("MongoDB Connected ✅"))
+  .catch(err => console.log(err));
+
+// ✅ Model
+const User = mongoose.model("User", {
+  name: String
+});
+
+// test
 app.get("/", (req, res) => {
   res.send("API is working 🚀");
 });
@@ -18,23 +29,17 @@ app.get("/health", (req, res) => {
   res.send("OK");
 });
 
-// POST
-app.post("/users", (req, res) => {
-  const user = req.body;
-
-  console.log(user);
-
-  res.json({
-    message: "User created successfully",
-    data: user
-  });
+// ✅ POST
+app.post("/users", async (req, res) => {
+  const newUser = new User(req.body);
+  await newUser.save();
+  res.json(newUser);
 });
 
-// ✅ GET (هذا اللي تضيفه)
-app.get("/users", (req, res) => {
-  res.json([
-    { name: "Test User" }
-  ]);
+// ✅ GET
+app.get("/users", async (req, res) => {
+  const users = await User.find();
+  res.json(users);
 });
 
 app.listen(PORT, "0.0.0.0", () => {
