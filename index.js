@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 
 app.use(cors());
-app.use(express.json()); // مهم جدًا
+app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
@@ -18,7 +18,7 @@ app.get("/health", (req, res) => {
   res.send("OK");
 });
 
-// 👇 هذا الجديد
+// POST
 app.post("/users", (req, res) => {
   const user = req.body;
 
@@ -28,6 +28,13 @@ app.post("/users", (req, res) => {
     message: "User created successfully",
     data: user
   });
+});
+
+// ✅ GET (هذا اللي تضيفه)
+app.get("/users", (req, res) => {
+  res.json([
+    { name: "Test User" }
+  ]);
 });
 
 app.listen(PORT, "0.0.0.0", () => {
