@@ -1,35 +1,33 @@
 const express = require("express");
+const cors = require("cors");
+
 const app = express();
+
+app.use(cors());
+app.use(express.json()); // مهم جدًا
 
 const PORT = process.env.PORT || 3000;
 
-// middleware عشان نقرأ JSON
-app.use(express.json());
-
-// بيانات وهمية
-let users = [
-  { id: 1, name: "Ali" },
-  { id: 2, name: "Sara" }
-];
-
-// الصفحة الرئيسية
+// test route
 app.get("/", (req, res) => {
   res.send("API is working 🚀");
 });
 
-// جلب كل المستخدمين
-app.get("/users", (req, res) => {
-  res.json(users);
+// health
+app.get("/health", (req, res) => {
+  res.send("OK");
 });
 
-// إضافة مستخدم
+// 👇 هذا الجديد
 app.post("/users", (req, res) => {
-  const newUser = {
-    id: users.length + 1,
-    name: req.body.name
-  };
-  users.push(newUser);
-  res.json(newUser);
+  const user = req.body;
+
+  console.log(user);
+
+  res.json({
+    message: "User created successfully",
+    data: user
+  });
 });
 
 app.listen(PORT, "0.0.0.0", () => {
