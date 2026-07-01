@@ -48,6 +48,17 @@ app.delete("/users/:id", async (req, res) => {
   res.json({ message: "User deleted" });
 });
 
+// ✅ UPDATE (Edit user)
+app.put("/users/:id", async (req, res) => {
+  const updatedUser = await User.findByIdAndUpdate(
+    req.params.id,
+    { name: req.body.name },
+    { new: true }
+  );
+
+  res.json(updatedUser);
+});
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log("Server running on port " + PORT);
 });
